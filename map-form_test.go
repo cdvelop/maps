@@ -19,7 +19,7 @@ func TestBuildMapForm(t *testing.T) {
 		Data   map[string]string // campo no valido
 	}
 
-	ejemplo := EjemploStruct{
+	ejemplo := &EjemploStruct{
 		Name:   "Juan",
 		Edad:   30,
 		Altura: 1.75,
