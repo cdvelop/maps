@@ -31,7 +31,7 @@ func TestBuildMapForm(t *testing.T) {
 	result, err := maps.BuildFormString(ejemplo)
 
 	// Verificación de errores
-	if err != nil {
+	if err != "" {
 		t.Errorf("error TestBuildMapForm\nSe esperaba error nulo, pero se recibió error: %v", err)
 		log.Fatalln()
 	}

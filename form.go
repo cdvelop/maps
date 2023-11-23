@@ -4,12 +4,11 @@ import (
 	"reflect"
 	"strconv"
 
-	"github.com/cdvelop/model"
 	"github.com/cdvelop/strings"
 )
 
-func BuildFormString(struct_data interface{}) (map[string]string, error) {
-	form := map[string]string{}
+func BuildFormString(struct_data interface{}) (form map[string]string, err string) {
+	form = make(map[string]string)
 
 	// Obtener el valor y tipo de la estructura
 	valueOfStruct := reflect.ValueOf(struct_data)
@@ -18,7 +17,7 @@ func BuildFormString(struct_data interface{}) (map[string]string, error) {
 	// Manejar punteros de estructuras
 	if structType.Kind() == reflect.Ptr {
 		if valueOfStruct.IsNil() {
-			return nil, model.Error("el puntero de la estructura no puede ser nulo")
+			return nil, "el puntero de la estructura no puede ser nulo"
 		}
 		valueOfStruct = valueOfStruct.Elem()
 		structType = structType.Elem()
@@ -26,7 +25,7 @@ func BuildFormString(struct_data interface{}) (map[string]string, error) {
 
 	// Verificar si el argumento es una estructura
 	if structType.Kind() != reflect.Struct {
-		return nil, model.Error("el argumento debe ser una estructura o un puntero a una estructura")
+		return nil, "el argumento debe ser una estructura o un puntero a una estructura"
 	}
 
 	for i := 0; i < valueOfStruct.NumField(); i++ {
@@ -63,5 +62,5 @@ func BuildFormString(struct_data interface{}) (map[string]string, error) {
 		}
 	}
 
-	return form, nil
+	return form, ""
 }
