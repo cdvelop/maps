@@ -32,7 +32,7 @@ func BuildFormString(struct_data interface{}) (form map[string]string, err strin
 		nameValue := structType.Field(i).Name
 
 		// Solo si la primera letra es mayúscula
-		if _, ok := strings.VALID_LETTERS[nameValue[0]]; ok {
+		if _, ok := strings.LettersUpperLowerCase()[rune(nameValue[0])]; ok {
 
 			field := valueOfStruct.Field(i)
 			fieldType := field.Type()
