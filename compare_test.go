@@ -1,11 +1,9 @@
-package maps_test
+package maps
 
 import (
 	"fmt"
 	"log"
 	"testing"
-
-	"github.com/cdvelop/maps"
 )
 
 func TestAreSliceMapsIdentical(t *testing.T) {
@@ -18,7 +16,7 @@ func TestAreSliceMapsIdentical(t *testing.T) {
 		{"a": "1", "b": "2"},
 		{"c": "3", "d": "4"},
 	}
-	if !maps.AreSliceMapsIdentical(slice1, slice2) {
+	if !AreSliceMapsIdentical(slice1, slice2) {
 		t.Errorf("Los slices de mapas deberían ser idénticos, pero no lo son.")
 	}
 
@@ -31,7 +29,7 @@ func TestAreSliceMapsIdentical(t *testing.T) {
 		{"a": "1", "b": "2"},
 		{"c": "3", "d": "5"},
 	}
-	if maps.AreSliceMapsIdentical(slice3, slice4) {
+	if AreSliceMapsIdentical(slice3, slice4) {
 		t.Errorf("Los slices de mapas deberían tener diferentes valores, pero son idénticos.")
 	}
 
@@ -44,7 +42,7 @@ func TestAreSliceMapsIdentical(t *testing.T) {
 		{"a": "1", "b": "2"},
 		{"e": "3", "d": "4"},
 	}
-	if maps.AreSliceMapsIdentical(slice5, slice6) {
+	if AreSliceMapsIdentical(slice5, slice6) {
 		t.Errorf("Los slices de mapas deberían tener diferentes claves, pero son idénticos.")
 	}
 
@@ -57,7 +55,7 @@ func TestAreSliceMapsIdentical(t *testing.T) {
 		{"c": "3", "d": "4"},
 		{"a": "1", "b": "2"},
 	}
-	if !maps.AreSliceMapsIdentical(slice7, slice8) {
+	if !AreSliceMapsIdentical(slice7, slice8) {
 		fmt.Println("Caso 4 Los slices de mapas deberían ser idénticos, pero no lo son.")
 		log.Fatal()
 	}
@@ -71,9 +69,52 @@ func TestAreSliceMapsIdentical(t *testing.T) {
 		{"d": "4", "c": "3"},
 		{"b": "2", "a": "1"},
 	}
-	if !maps.AreSliceMapsIdentical(slice9, slice10) {
+	if !AreSliceMapsIdentical(slice9, slice10) {
 		fmt.Println("Caso 5 Los slices de mapas deberían ser idénticos, pero no lo son.")
 		log.Fatal()
 	}
 
+}
+
+func TestCompareMaps(t *testing.T) {
+	tests := []struct {
+		name     string
+		mapA     map[string]string
+		mapB     map[string]string
+		expected string
+	}{
+		{
+			name:     "EqualMaps",
+			mapA:     map[string]string{"key1": "value1", "key2": "value2"},
+			mapB:     map[string]string{"key1": "value1", "key2": "value2"},
+			expected: "",
+		},
+		{
+			name:     "KeysNotFound",
+			mapA:     map[string]string{"key1": "value1", "key2": "value2"},
+			mapB:     map[string]string{"key1": "value1", "key3": "value3"},
+			expected: mapKeyNotFound("key2", "B") + ", " + mapKeyNotFound("key3", "A"),
+		},
+		{
+			name:     "DifferentValues",
+			mapA:     map[string]string{"key1": "value1", "key2": "value2"},
+			mapB:     map[string]string{"key1": "value1", "key2": "value_different"},
+			expected: mapDifValue("key2", "value2", "value_different"),
+		},
+		{
+			name:     "DifferentSize",
+			mapA:     map[string]string{"key1": "value1"},
+			mapB:     map[string]string{"key1": "value1", "key2": "value_different"},
+			expected: mapKeyNotFound("key2", "A"),
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			result := CompareMaps(test.mapA, test.mapB)
+			if result != test.expected {
+				t.Errorf("\n- Expected:\n%q\n- But got:\n%q", test.expected, result)
+			}
+		})
+	}
 }

@@ -3,9 +3,9 @@ package maps
 import (
 	"reflect"
 	"strconv"
-
-	"github.com/cdvelop/strings"
 )
+
+var st = strings{}
 
 func BuildFormString(struct_data interface{}) (form map[string]string, err string) {
 	form = make(map[string]string)
@@ -32,12 +32,12 @@ func BuildFormString(struct_data interface{}) (form map[string]string, err strin
 		nameValue := structType.Field(i).Name
 
 		// Solo si la primera letra es mayúscula
-		if _, ok := strings.LettersUpperLowerCase()[rune(nameValue[0])]; ok {
+		if _, ok := st.LettersUpperLowerCase()[rune(nameValue[0])]; ok {
 
 			field := valueOfStruct.Field(i)
 			fieldType := field.Type()
 
-			nameValue = strings.LowerCaseFirstLetter(nameValue)
+			nameValue = st.LowerCaseFirstLetter(nameValue)
 
 			// Convertir valores a string según el tipo
 			var fieldValue string
